@@ -1,0 +1,46 @@
+name: Case Format Check
+
+on:
+  pull_request:
+    paths:
+      - 'by-industry/**/*.md'
+      - 'by-pipeline-stage/**/*.md'
+      - 'by-complexity/**/*.md'
+      - 'case-template.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check case frontmatter
+        shell: bash
+        run: |
+          set -euo pipefail
+          files=()
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            while IFS= read -r file; do files+=("$file"); done < <(find by-industry by-pipeline-stage by-complexity -type f -name '*.md' -print 2>/dev/null || true)
+          else
+            while IFS= read -r file; do files+=("$file"); done < <(git diff --name-only "${{ github.event.pull_request.base.sha }}" "${{ github.sha }}" -- 'by-industry/**/*.md' 'by-pipeline-stage/**/*.md' 'by-complexity/**/*.md')
+          fi
+          for file in "${files[@]}"; do
+            [[ -f "$file" ]] || continue
+            if [[ "$(head -n 1 "$file")" != '---' ]]; then
+              echo "::error file=$file::缺少 YAML frontmatter 起始标记"
+              exit 1
+            fi
+            for field in id title industry difficulty status authorization; do
+              if ! grep -q "^${field}:" "$file"; then
+                echo "::error file=$file::缺少 frontmatter 字段 ${field}"
+                exit 1
+              fi
+            done
+          done
+          echo "Case format check passed (${#files[@]} file(s))."
