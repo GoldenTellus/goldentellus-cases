@@ -3,14 +3,21 @@ id: CASE-XXX
 title: ""
 industry: ""
 company_size: ""
+pipeline_stages: []
 pipeline_team: []
 timeline: ""
 difficulty: beginner
 status: draft
 demo_link: ""
+related_knowledge: []
+related_playbooks: []
+related_tools: []
+evidence_types: []
 date: YYYY-MM-DD
 authors: []
 authorization: pending
+anonymization: pending
+tags: []
 ---
 
 # CASE-XXX：案例标题
