@@ -18,6 +18,6 @@
 
 > 这是什么：企业可阅读、FDE 可复盘的案例库。
 >
-> 上一个：`goldentellus-home` -> **当前** -> 下一个：`goldentellus-demos`
+> 上一个：`goldentellus-home` -> **当前** -> 下一个：`goldentellus-labs`
 >
 > 我应该看：先读模板和脱敏指南，再提交案例。
